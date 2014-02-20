@@ -47,7 +47,6 @@ void cameraSetupPerspective4(ofCamera *cam, bool vFlip, float fov, float nearDis
 	{cam->setupPerspective(vFlip, fov, nearDist, farDist);}
 
 float cameraGetImagePlaneDistance0(ofCamera *cam) {return cam->getImagePlaneDistance();}
-void cameraBegin0(ofCamera *cam) {cam->begin();}
 
 ofMatrix4x4 cameraGetProjectionMatrix0(ofCamera *cam)
 	{return cam->getProjectionMatrix();}
@@ -71,6 +70,46 @@ void meshSave1(ofMesh* mesh, string path)
 	{mesh->save(path);}
 void meshSetFromTriangles1(ofMesh *mesh,  const vector<ofMeshFace>& tris)
 	{mesh->setFromTriangles(tris);}
+
+ofMesh meshPlane2(float width, float height) {return ofMesh::plane(width, height);}
+ofMesh meshPlane3(float width, float height, int columns)
+	{return ofMesh::plane(width, height, columns);}
+ofMesh meshPlane4(float width, float height, int columns, int rows)
+	{return ofMesh::plane(width, height, columns, rows);}
+
+ofMesh meshSphere1(float radius) {return ofMesh::sphere(radius);}
+ofMesh meshSphere2(float radius, int res) {return ofMesh::sphere(radius, res);}
+
+ofMesh meshIcosphere1(float radius) {return ofMesh::icosphere(radius);}
+ofMesh meshIcosphere2(float radius, int iterations)
+	{return ofMesh::icosphere(radius, iterations);}
+
+ofMesh meshCylinder2(float radius, float height)
+	{return ofMesh::cylinder(radius, height);}
+ofMesh meshCylinder3(float radius, float height, int radiusSegments)
+	{return ofMesh::cylinder(radius, height, radiusSegments);}
+ofMesh meshCylinder4(float radius, float height, int radiusSegments, int heightSegments)
+	{return ofMesh::cylinder(radius, height, radiusSegments, heightSegments);}
+ofMesh meshCylinder5(float radius, float height, int radiusSegments, int heightSegments, int numCapSegments)
+	{return ofMesh::cylinder(radius, height, radiusSegments, heightSegments, numCapSegments);}
+ofMesh meshCylinder6(float radius, float height, int radiusSegments, int heightSegments, int numCapSegments, bool bCapped)
+	{return ofMesh::cylinder(radius, height, radiusSegments, heightSegments, numCapSegments, bCapped);}
+
+ofMesh meshCone2(float radius, float height) {return ofMesh::cone(radius, height);}
+ofMesh meshCone3(float radius, float height, int radiusSegments)
+	{return ofMesh::cone(radius, height, radiusSegments);}
+ofMesh meshCone4(float radius, float height, int radiusSegments, int heightSegments)
+	{return ofMesh::cone(radius, height, radiusSegments, heightSegments);}
+ofMesh meshCone5(float radius, float height, int radiusSegments, int heightSegments, int capSegments)
+	{return ofMesh::cone(radius, height, radiusSegments, heightSegments, capSegments);}
+
+ofMesh meshBox3(float width, float height, float depth) {return ofMesh::box(width, height, depth);}
+ofMesh meshBox4(float width, float height, float depth, int resX)
+	{return ofMesh::box(width, height, depth, resX);}
+ofMesh meshBox5(float width, float height, float depth, int resX, int resY)
+	{return ofMesh::box(width, height, depth, resX, resY);}
+ofMesh meshBox6(float width, float height, float depth, int resX, int resY, int resZ)
+	{return ofMesh::box(width, height, depth, resX, resY, resZ);}
 
 void nodeSetParent1(ofNode *node, ofNode& parent) {node->setParent(parent);}
 void nodeClearParent0(ofNode *node) {node->clearParent();}
@@ -164,9 +203,9 @@ luabind::scope register3d() {
 			.def("getImagePlaneDistance", &cameraGetImagePlaneDistance0)
 			.def("getImagePlaneDistance", &ofCamera::getImagePlaneDistance)
 			
-			.def("begin", &cameraBegin0)
-			.def("begin", &ofCamera::begin)
-			.def("end", &ofCamera::end)
+			.def("beginCamera", (void(ofCamera::*)(void)) &ofCamera::begin)
+			.def("beginCamera", (void(ofCamera::*)(ofRectangle)) &ofCamera::begin)
+			.def("endCamera", &ofCamera::end)
 			
 			.def("getProjectionMatrix", &cameraGetProjectionMatrix0)
 			.def("getProjectionMatrix", &ofCamera::getProjectionMatrix)
@@ -333,8 +372,32 @@ luabind::scope register3d() {
 			.def("setFromTriangles", &ofMesh::setFromTriangles)
 			.def("smoothNormals", &ofMesh::smoothNormals)
 			
-			// ignoring the static 3d shape drawing functions, use the globals instead
-			
+			// static 3d shape generators
+			.scope [
+				def("plane", &meshPlane2),
+				def("plane", &meshPlane3),
+				def("plane", &meshPlane4),
+				def("plane", &ofMesh::plane),
+				def("sphere", &meshSphere1),
+				def("sphere", &meshSphere2),
+				def("sphere", &ofMesh::sphere),
+				def("icosahedron", &ofMesh::icosahedron),
+				def("cylinder", &meshCylinder2),
+				def("cylinder", &meshCylinder3),
+				def("cylinder", &meshCylinder4),
+				def("cylinder", &meshCylinder5),
+				def("cylinder", &meshCylinder6),
+				def("cylinder", &ofMesh::cylinder),
+				def("cone", &meshCone2),
+				def("cone", &meshCone3),
+				def("cone", &meshCone4),
+				def("cone", &meshCone5),
+				def("cone", &ofMesh::cone),
+				def("box", &meshBox3),
+				def("box", &meshBox4),
+				def("box", &meshBox5),
+				def("box", &ofMesh::box)
+			]
 			.def("draw", (void(ofMesh::*)(ofPolyRenderMode)) &ofMesh::draw),
 			
 		///////////////////////////////
