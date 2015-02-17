@@ -1,0 +1,62 @@
+* GEA
+
+
+GEA (Graphics Engine for Artists) is an Heterogeneous System for Live Visuals with the use Dynamic Algorithmic Score developed by Aris Bezas (aka igoumeninja).
+
+The main parts of GEA are the following:
+- *openFrameworks* (http://www.openframeworks.cc/download/)
+- *ofxLua* by Dan Wilxon (https://github.com/danomatika/ofxLua)
+- *SuperCollider* (http://supercollider.sourceforge.net/)
+- *Emacs* (http://www.gnu.org/software/emacs/)
+
+* Installation ans System Requirements
+
+- openFrameworks latest version 0.8.4 from http://www.openframeworks.cc/download/
+- clone ofxLua from https://github.com/igoumeninja/ofxLua at /openframeworks/addons/ directory and switch to gea branch
+- copy ofxMIDI from  https://github.com/danomatika/ofxMidi at /openframworks/addon/ directory
+- XCode Version 6.1.1. (usefull tool for XCode plug-in https://vimeo.com/79061998)
+- SuperCollider 3.6.2 (http://supercollider.sourceforge.net/)
+- Copy *algorothmic-dynamic-score* folder to /Supercollider/Extensions/ folder
+- Install homebrew and Boost C++ libraries (ofxLua dependencies)
+- Install Emacs and osc.el package (http://delysid.org/emacs/osc.html)
+- Fix bug from mypost at OF forum [fn:offorumpost]. If flickering is a problem, there is a change you can make deep inside OF:
+  1. open =ofAppGlutWindow.cpp= from =./libs/openFrameworks/app=
+  2. search replace GLUT_DOUBLE with GLUT_SINGLE
+  3. search replace glutSwapBuffers with glFlush. This will help with ofSetBackgroundAuto(false), but it will make ofSetBackgroundAuto(true) look bad.
+
+* Emacs configuration for sendind OSC messages
+
+
+#+BEGIN_SRC emacs
+;; Use emacs as interpreter
+;;
+;; Aris Bezas 8:27 AM Apr 18, 2013
+;; ========================================
+
+;; Send OSC messages with Emacs include osc.el from http://delysid.org/emacs/osc.html at Emacs.app/Contents/...
+
+;; Create SuperColider and openFrameworks OSC clients
+(setq sc-client (osc-make-client "127.0.0.1" 57120))
+(setq of-client (osc-make-client "127.0.0.1" 12345))
+(setq gea-client (osc-make-client "127.0.0.1" 12345))
+
+;;===========================================
+(defun send-test-osc ()  (interactive)
+  (osc-send-message sc-client "1,2,3 Test"))
+
+(defun update-script ()  (interactive) (save-buffer)
+  (osc-send-message gea-client "updateScript" (buffer-file-name)))
+(global-set-key (kbd "s-<return>") 'update-script)
+
+(defun add-script ()  (interactive) (save-buffer)
+  (osc-send-message gea-client "addScript" (buffer-file-name)))
+(global-set-key (kbd "C-M-+") 'add-script)
+
+(defun shader ()  (interactive) (save-buffer)
+  (osc-send-message gea-client "updateShaders"))
+
+(defun doshader ()  (interactive) (save-buffer)
+  (osc-send-message gea-client "doShader"))
+
+(menu-bar-mode -1)
+#+END_SRC
