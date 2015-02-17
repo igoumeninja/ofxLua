@@ -60,3 +60,5 @@ The main parts of GEA are the following:
 
 (menu-bar-mode -1)
 #+END_SRC
+* Include MIDI
+The *GEA* xcode project is including ofxMIDI addon. To make it work follow the ofxMIDI instruction from https://github.com/danomatika/ofxMidi#adding-ofxmidi-to-an-existing-project
