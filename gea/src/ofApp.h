@@ -59,6 +59,9 @@ public:
     string scriptDirectory;
     int scriptID;
     
+    float beat();
+    float beatNum;
+    
     float mlab[100];
     float amp();
     float amplitude;

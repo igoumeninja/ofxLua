@@ -45,6 +45,8 @@ luabind::scope registerGea() {
     
             class_<ofApp>("app")
                 .def(constructor<>())
+                .def("beat", &ofApp::beat)
+                .property("beat", &ofApp::beat) // readonly property
                 .def("amp", &ofApp::amp)
                 .property("amp", &ofApp::amp) // readonly property
                 .def("freq", &ofApp::freq)

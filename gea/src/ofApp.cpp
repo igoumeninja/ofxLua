@@ -55,7 +55,7 @@ void ofApp::setup() {
         }
     #endif
     
-    doShader = true;	
+    doShader = false;
     
     //******************//
     //******************//
@@ -134,7 +134,14 @@ void ofApp::update() {
 #endif
         }
         if(m.getAddress() == "doShader") {doShader = !doShader;}
-		// Machine Listening
+
+        // Algorithmic Dynamic Score
+        if(m.getAddress() == "/beat"){
+            beatNum = m.getArgAsFloat(0);
+            cout << beatNum << endl;
+        }
+        
+        // Machine Listening
 		if(m.getAddress() == "/amp"){
             amplitude = m.getArgAsFloat(0);
             //cout << amplitude << endl;
@@ -323,6 +330,10 @@ void ofApp::runScript(int scriptID) {
 }
 //******************//
 
+
+float ofApp::beat() {
+    return beatNum;
+}
 
 float ofApp::amp() {
     return amplitude;

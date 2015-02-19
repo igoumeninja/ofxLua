@@ -15,7 +15,7 @@ function update()
    of.setColor(255,255,255,250)
    of.rect(100, 200,200,200)
    of.setColor(255,0,0,250)
-   of.rect(200, 200,200,mlab.beatFun*200)
+   of.rect(mlab.beat*200, mlab.beat*200,200,200)
 end
 ----------------------------------------------------
 function draw()
